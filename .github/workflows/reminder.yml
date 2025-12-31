@@ -2,7 +2,7 @@ name: 给女友的每日提醒 ❤️
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # 每天 9:00 AM (中国时间)
+    - cron: "0 0 * * *"   # 每天 8:00 AM (中国时间)
   workflow_dispatch: {}
 
 jobs:
@@ -29,12 +29,13 @@ jobs:
       # Step 4: Run the Python script with environment variables explicitly passed
       - name: Run the script
         env:
-          SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}  # 从 GitHub Secrets 中获取
-          CITY: ${{ vars.CITY }}                      # 从 GitHub Variables 中获取城市（Weifang）
-          TZ: ${{ vars.TZ }}                          # 从 GitHub Variables 中获取时区（Asia/Shanghai）
-          HEFENG_API_KEY: ${{ secrets.HEFENG_API_KEY }}  # 从 GitHub Secrets 中获取 HEFENG API Key
+          SERVERCHAN_KEY1: ${{ secrets.SERVERCHAN_KEY1 }}  # 从 GitHub Secrets 中获取第一个微信的 SendKey
+          SERVERCHAN_KEY2: ${{ secrets.SERVERCHAN_KEY2 }}  # 从 GitHub Secrets 中获取第二个微信的 SendKey
+          CITY: ${{ vars.CITY }}                          # 从 GitHub Variables 中获取城市（如 Weifang）
+          TZ: ${{ vars.TZ }}                              # 从 GitHub Variables 中获取时区（如 Asia/Shanghai）
+          HEFENG_API_KEY: ${{ secrets.HEFENG_API_KEY }}    # 从 GitHub Secrets 中获取 HEFENG API Key
         run: |
           echo "CITY = $CITY"
           echo "TZ = $TZ"
           echo "HEFENG_API_KEY = $HEFENG_API_KEY"  # 打印 HEFENG_API_KEY 来验证
-          python say_to_lady.py
+          python say_to_lady.py  # 运行您的 Python 脚本
