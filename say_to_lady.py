@@ -15,6 +15,7 @@
 
 import os
 import datetime as dt
+import pytz
 import requests
 
 
@@ -133,19 +134,18 @@ def fmt_num(x, unit=""):
         return f"{float(x):.0f}{unit}"
     except Exception:
         return f"{x}{unit}"
-        print("DEBUG CITY =", repr(city))
-
 
 
 # ============ 主流程 ============
 def main():
-    # 1) 位置：LAT/LON > CITY > 默认西安
+    # 1) 位置：LAT/LON > CITY > 默认潍坊
     tz = os.getenv("TZ", "Asia/Shanghai").strip() or "Asia/Shanghai"
     city = (os.getenv("CITY") or "").strip()
 
     lat_env = (os.getenv("LAT") or "").strip()
     lon_env = (os.getenv("LON") or "").strip()
 
+    # 打印调试信息，确保读取 CITY
     print("DEBUG CITY =", repr(city), "TZ =", repr(tz), "LAT =", repr(lat_env), "LON =", repr(lon_env))
 
     if lat_env and lon_env:
@@ -154,19 +154,22 @@ def main():
     elif city:
         lat, lon, loc_name = geocode_city(city)
     else:
-        lat, lon, loc_name = 34.3416, 108.9398, "Xi'an · China"  # 默认西安
+        # 默认潍坊（如果没有 CITY 设置）
+        lat, lon, loc_name = 36.7096, 119.1618, "Weifang · China"
 
     # 2) 获取天气 + 每日一句
     w = fetch_weather(lat, lon, tz)
     quote, source = fetch_hitokoto()
 
     # 3) 中国时间（UTC+8）
-    now_cn = dt.datetime.utcnow() + dt.timedelta(hours=8)
+    now_cn = dt.datetime.now(pytz.timezone(tz))
     now_str = now_cn.strftime("%Y-%m-%d %H:%M")
 
+    # 4) 通知列表直接看到句子
     title = f"{w['emoji']} {quote[:28]}"
     short = quote
 
+    # 5) 详情：天气 + 来源 + 时间
     weather_line = (
         f"{w['emoji']} {loc_name}\n"
         f"当前 {fmt_num(w['temp'],'°C')}（体感 {fmt_num(w['feel'],'°C')}），风 {fmt_num(w['wind'],' km/h')}\n"
@@ -186,4 +189,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
