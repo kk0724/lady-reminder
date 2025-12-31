@@ -137,21 +137,20 @@ def fmt_num(x, unit=""):
 
 # ============ 主流程 ============
 def main():
-    # 1) 位置：LAT/LON > CITY > 默认东京
-    tz = os.getenv("TZ", "Asia/Tokyo").strip() or "Asia/Tokyo"
-    city = (os.getenv("CITY") or "").strip()
+    # 1) 位置：LAT/LON > CITY > 默认西安
+tz = os.getenv("TZ", "Asia/Shanghai").strip() or "Asia/Shanghai"
+city = (os.getenv("CITY") or "").strip()
 
-    lat_env = (os.getenv("LAT") or "").strip()
-    lon_env = (os.getenv("LON") or "").strip()
+lat_env = (os.getenv("LAT") or "").strip()
+lon_env = (os.getenv("LON") or "").strip()
 
-    if lat_env and lon_env:
-        lat, lon = float(lat_env), float(lon_env)
-        loc_name = city or "自定义位置"
-    elif city:
-        lat, lon, loc_name = geocode_city(city)
-    else:
-        # 默认东京（你也可以在 GitHub Variables 里设 CITY=Tokyo）
-        lat, lon, loc_name = 35.6762, 139.6503, "Tokyo · Japan"
+if lat_env and lon_env:
+    lat, lon = float(lat_env), float(lon_env)
+    loc_name = city or "自定义位置"
+elif city:
+    lat, lon, loc_name = geocode_city(city)
+else:
+    lat, lon, loc_name = 34.3416, 108.9398, "Xi'an · China"
 
     # 2) 获取天气 + 每日一句
     w = fetch_weather(lat, lon, tz)
@@ -185,3 +184,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
