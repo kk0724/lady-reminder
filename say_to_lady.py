@@ -136,17 +136,30 @@ def fmt_num(x, unit=""):
         return f"{x}{unit}"
 
 
+# ============ 自动提醒：带伞和穿衣 ============
+def weather_reminders(w: dict) -> str:
+    reminders = []
+    
+    # 降雨提醒
+    if w["pop"] and w["pop"] > 50:
+        reminders.append("记得带伞哦🌧️")
+
+    # 温度过低提醒
+    if w["temp"] and w["temp"] < 10:
+        reminders.append("天气冷，记得穿暖和些🧥")
+
+    return " ".join(reminders)
+
+
 # ============ 主流程 ============
 def main():
     # 1) 位置：LAT/LON > CITY > 默认潍坊
     tz = os.getenv("TZ", "Asia/Shanghai").strip() or "Asia/Shanghai"
-    print("DEBUG: CITY from GitHub Actions =", os.getenv("CITY"))
     city = (os.getenv("CITY") or "").strip()
 
     lat_env = (os.getenv("LAT") or "").strip()
     lon_env = (os.getenv("LON") or "").strip()
 
-    # 打印调试信息，确保读取 CITY
     print("DEBUG CITY =", repr(city), "TZ =", repr(tz), "LAT =", repr(lat_env), "LON =", repr(lon_env))
 
     if lat_env and lon_env:
@@ -155,8 +168,7 @@ def main():
     elif city:
         lat, lon, loc_name = geocode_city(city)
     else:
-        # 默认潍坊（如果没有 CITY 设置）
-        lat, lon, loc_name = 36.7096, 119.1618, "Weifang · China"
+        lat, lon, loc_name = 34.3416, 108.9398, "Weifang · China"  # 默认潍坊
 
     # 2) 获取天气 + 每日一句
     w = fetch_weather(lat, lon, tz)
@@ -177,6 +189,11 @@ def main():
         f"今日 {fmt_num(w['tmin'],'°C')} ~ {fmt_num(w['tmax'],'°C')}，降雨概率 {fmt_num(w['pop'],'%')}"
     )
 
+    # 添加天气提醒
+    reminders = weather_reminders(w)
+    if reminders:
+        weather_line += f"\n\n提醒：{reminders}"
+
     desp = (
         f"{quote}\n\n"
         f"—— {source}\n\n"
@@ -190,4 +207,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
