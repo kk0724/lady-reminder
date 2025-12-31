@@ -2,32 +2,35 @@ name: 给女友的每日提醒 ❤️
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # 每天 09:00 JST
+    - cron: "0 0 * * *"   # 每天 9:00 AM (中国时间)
   workflow_dispatch: {}
-
 
 jobs:
   run:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout
+      # Step 1: Checkout the code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      # Step 2: Set up Python
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          python -m pip install -U pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run script
+      # Step 4: Run the Python script
+      - name: Run the script
         env:
-          SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}
-          CITY: ${{ secrets.CITY }}   # 确保传递了 CITY 变量
-          TZ: ${{ secrets.TZ }}       # 确保传递了时区变量
+          SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}  # 从 GitHub Secrets 中获取
+          CITY: ${{ secrets.CITY }}                      # 从 GitHub Variables 中获取城市（Weifang）
+          TZ: ${{ secrets.TZ }}                          # 从 GitHub Variables 中获取时区（Asia/Shanghai）
         run: |
           python say_to_lady.py
-
