@@ -133,6 +133,8 @@ def fmt_num(x, unit=""):
         return f"{float(x):.0f}{unit}"
     except Exception:
         return f"{x}{unit}"
+        print("DEBUG CITY =", repr(city))
+
 
 
 # ============ 主流程 ============
@@ -184,3 +186,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
