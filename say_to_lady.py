@@ -7,7 +7,8 @@
 - 用 Server酱推送每日提醒
 
 环境变量（建议在 GitHub Secrets / Variables 里设置）：
-- SERVERCHAN_KEY   必填：Server酱 SendKey（用女友的）
+- SERVERCHAN_KEY1   必填：第一个微信的 Server酱 SendKey
+- SERVERCHAN_KEY2   必填：第二个微信的 Server酱 SendKey
 - CITY             可选：城市名（英文，如 Weifang）
 - LAT / LON        可选：经纬度（优先级高于 CITY）
 - TZ               可选：时区（默认 Asia/Shanghai）
@@ -20,8 +21,7 @@ import requests
 
 
 # ============ Server酱推送 ============
-def push_serverchan(title: str, desp: str = "", short: str = ""):
-    key = os.getenv("SERVERCHAN_KEY")
+def push_serverchan(title: str, desp: str = "", short: str = "", key: str = None):
     if not key:
         raise RuntimeError("未读取到 SERVERCHAN_KEY（请在 GitHub Secrets 中设置）")
 
@@ -197,8 +197,17 @@ def main():
         f"时间：{now_str}"
     )
 
-    push_serverchan(title=title, desp=desp, short=short)
-    print("sent quote+weather")
+    # 获取两个不同的 SendKey
+    key1 = os.getenv("SERVERCHAN_KEY1")  # 第一个微信的 SendKey
+    key2 = os.getenv("SERVERCHAN_KEY2")  # 第二个微信的 SendKey
+
+    # 发送到第一个微信账号
+    push_serverchan(title="每日提醒", desp=desp, short=short, key=key1)
+    print("已向第一个微信账号发送消息")
+
+    # 发送到第二个微信账号
+    push_serverchan(title="每日提醒", desp=desp, short=short, key=key2)
+    print("已向第二个微信账号发送消息")
 
 
 if __name__ == "__main__":
