@@ -30,9 +30,11 @@ jobs:
       - name: Run the script
         env:
           SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}  # 从 GitHub Secrets 中获取
-          CITY: ${{ vars.CITY }}                        # 从 GitHub Variables 中获取城市（Weifang）
-          TZ: ${{ vars.TZ }}                            # 从 GitHub Variables 中获取时区（Asia/Shanghai）
+          CITY: ${{ secrets.CITY }}                      # 从 GitHub Variables 中获取城市（Weifang）
+          TZ: ${{ secrets.TZ }}                          # 从 GitHub Variables 中获取时区（Asia/Shanghai）
+          HEFENG_API_KEY: ${{ secrets.HEFENG_API_KEY }}  # 从 GitHub Secrets 中获取 HEFENG API Key
         run: |
           echo "CITY = $CITY"
           echo "TZ = $TZ"
+          echo "HEFENG_API_KEY = $HEFENG_API_KEY"  # 打印 HEFENG_API_KEY 来验证
           python say_to_lady.py
