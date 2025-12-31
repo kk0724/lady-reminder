@@ -2,17 +2,9 @@ name: 给女友的每日提醒 ❤️
 
 on:
   schedule:
-    # 日本时间（JST）
-    # 早安 08:30
-    - cron: "30 23 * * *"
-    # 午饭 12:10
-    - cron: "10 3 * * *"
-    # 下午 16:30
-    - cron: "30 7 * * *"
-    # 晚安 22:30
-    - cron: "30 13 * * *"
-
+    - cron: "0 0 * * *"   # 每天 09:00 JST
   workflow_dispatch: {}
+
 
 jobs:
   run:
