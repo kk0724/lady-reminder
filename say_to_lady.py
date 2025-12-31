@@ -140,6 +140,7 @@ def fmt_num(x, unit=""):
 def main():
     # 1) 位置：LAT/LON > CITY > 默认潍坊
     tz = os.getenv("TZ", "Asia/Shanghai").strip() or "Asia/Shanghai"
+    print("DEBUG: CITY from GitHub Actions =", os.getenv("CITY"))
     city = (os.getenv("CITY") or "").strip()
 
     lat_env = (os.getenv("LAT") or "").strip()
@@ -189,3 +190,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
