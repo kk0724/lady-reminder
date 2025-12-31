@@ -54,18 +54,14 @@ def fetch_weather_from_hefeng(city: str) -> dict:
     if not data:
         raise RuntimeError(f"天气数据解析失败：{d}")
 
-    # 提取天气信息
-    temp = data.get("temp")  # 当前温度
-    feels_like = data.get("feels_like")  # 体感温度
-    wind_speed = data.get("wind_speed")  # 风速
-    weather = data.get("text")  # 天气状况（如 晴天、阴天）
-    humidity = data.get("humidity")  # 湿度
+    # 提取天气信息，避免字段缺失导致错误
     return {
-        "temp": temp,
-        "feels_like": feels_like,
-        "wind_speed": wind_speed,
-        "weather": weather,
-        "humidity": humidity
+        "temp": data.get("temp", "N/A"),  # 当前温度
+        "feels_like": data.get("feels_like", "N/A"),  # 体感温度
+        "wind_speed": data.get("wind_speed", "N/A"),  # 风速
+        "weather": data.get("text", "N/A"),  # 天气状况（如 晴天、阴天）
+        "humidity": data.get("humidity", "N/A"),  # 湿度
+        "precip": data.get("precip", "0")  # 降水量
     }
 
 
@@ -79,12 +75,18 @@ def weather_reminders(w: dict) -> str:
     reminders = []
 
     # 降雨提醒
-    if float(w["precip"]) > 0:
-        reminders.append("记得带伞哦🌧️")
+    try:
+        if float(w["precip"]) > 0:
+            reminders.append("记得带伞哦🌧️")
+    except ValueError:
+        pass  # 如果 "precip" 无法转换为数字，忽略
 
     # 温度过低提醒
-    if float(w["temp"]) < 10:
-        reminders.append("天气冷，记得穿暖和些🧥")
+    try:
+        if float(w["temp"]) < 10:
+            reminders.append("天气冷，记得穿暖和些🧥")
+    except ValueError:
+        pass  # 如果 "temp" 无法转换为数字，忽略
 
     return " ".join(reminders)
 
@@ -146,4 +148,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
