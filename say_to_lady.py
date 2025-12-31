@@ -49,8 +49,9 @@ def fetch_hitokoto() -> tuple[str, str]:
 
 
 # ============ 和风天气：获取天气信息 ============
+# ============ 和风天气：获取天气信息 ============
 def fetch_weather_from_hefeng(city: str) -> dict:
-    hefeng_api_key = os.getenv("HEFENG_API_KEY")  # 获取和风天气的 API Key
+    hefeng_api_key = os.getenv("HEFENG_API_KEY")  # 从 GitHub Secrets 获取 HEFENG_API_KEY
     if not hefeng_api_key:
         raise RuntimeError("未读取到 HEFENG_API_KEY（请在 GitHub Secrets 中设置）")
 
@@ -83,6 +84,7 @@ def fetch_weather_from_hefeng(city: str) -> dict:
         "weather": weather,
         "humidity": humidity
     }
+
 
 
 def fmt_num(x, unit=""):
@@ -165,3 +167,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
