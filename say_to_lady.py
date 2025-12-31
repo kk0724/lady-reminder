@@ -144,28 +144,30 @@ def main():
     lat_env = (os.getenv("LAT") or "").strip()
     lon_env = (os.getenv("LON") or "").strip()
 
+    # ✅ 可选：临时打印，验证变量是否真的传进来了（确认后可删）
+    print("DEBUG CITY =", repr(city), "TZ =", repr(tz), "LAT =", repr(lat_env), "LON =", repr(lon_env))
+
     if lat_env and lon_env:
         lat, lon = float(lat_env), float(lon_env)
         loc_name = city or "自定义位置"
     elif city:
         lat, lon, loc_name = geocode_city(city)
     else:
-        # 兜底：默认西安（避免再回到东京）
         lat, lon, loc_name = 34.3416, 108.9398, "Xi'an · China"
 
     # 2) 获取天气 + 每日一句
     w = fetch_weather(lat, lon, tz)
     quote, source = fetch_hitokoto()
 
-    # 3) 时间：按中国时间显示（UTC+8）
+    # 3) 时间（中国时间 UTC+8）
     now_cn = dt.datetime.utcnow() + dt.timedelta(hours=8)
     now_str = now_cn.strftime("%Y-%m-%d %H:%M")
 
-    # 4) 通知列表直接看到句子：title/short 放 quote
+    # 4) 通知列表直接看到句子
     title = f"{w['emoji']} {quote[:28]}"
     short = quote
 
-    # 5) 点进去的详细内容：天气 + 来源 + 时间
+    # 5) 详情：天气 + 来源 + 时间
     weather_line = (
         f"{w['emoji']} {loc_name}\n"
         f"当前 {fmt_num(w['temp'],'°C')}（体感 {fmt_num(w['feel'],'°C')}），风 {fmt_num(w['wind'],' km/h')}\n"
@@ -182,5 +184,7 @@ def main():
     print("sent quote+weather")
 
 
+
 if __name__ == "__main__":
     main()
+
