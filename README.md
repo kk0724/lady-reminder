@@ -1,4 +1,5 @@
 # 微信推送每日消息
 
 通过server酱给微信定时推送消息的一种解决办法
-![Uploading image.png…]()
+![Alt text](.github/微信图片_20251231143518_37_4.png)
+
