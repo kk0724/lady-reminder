@@ -30,9 +30,9 @@ jobs:
       - name: Run the script
         env:
           SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}  # 从 GitHub Secrets 中获取
-          CITY: 'Xian'                               # 手动传递 CITY（如果你没在 Variables 中传递）
-          TZ: 'Asia/Shanghai'                           # 手动传递 TZ
+          CITY: ${{ vars.CITY }}                        # 从 GitHub Variables 中获取城市（Weifang）
+          TZ: ${{ vars.TZ }}                            # 从 GitHub Variables 中获取时区（Asia/Shanghai）
         run: |
-          echo "CITY = $CITY"  # 打印出 CITY 环境变量值
-          echo "TZ = $TZ"      # 打印出 TZ 环境变量值
+          echo "CITY = $CITY"
+          echo "TZ = $TZ"
           python say_to_lady.py
