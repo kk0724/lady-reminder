@@ -144,7 +144,6 @@ def main():
     lat_env = (os.getenv("LAT") or "").strip()
     lon_env = (os.getenv("LON") or "").strip()
 
-    # ✅ 可选：临时打印，验证变量是否真的传进来了（确认后可删）
     print("DEBUG CITY =", repr(city), "TZ =", repr(tz), "LAT =", repr(lat_env), "LON =", repr(lon_env))
 
     if lat_env and lon_env:
@@ -153,26 +152,25 @@ def main():
     elif city:
         lat, lon, loc_name = geocode_city(city)
     else:
-        lat, lon, loc_name = 34.3416, 108.9398, "Xi'an · China"
+        lat, lon, loc_name = 34.3416, 108.9398, "Xi'an · China"  # 默认西安
 
     # 2) 获取天气 + 每日一句
     w = fetch_weather(lat, lon, tz)
     quote, source = fetch_hitokoto()
 
-    # 3) 时间（中国时间 UTC+8）
+    # 3) 中国时间（UTC+8）
     now_cn = dt.datetime.utcnow() + dt.timedelta(hours=8)
     now_str = now_cn.strftime("%Y-%m-%d %H:%M")
 
-    # 4) 通知列表直接看到句子
     title = f"{w['emoji']} {quote[:28]}"
     short = quote
 
-    # 5) 详情：天气 + 来源 + 时间
     weather_line = (
         f"{w['emoji']} {loc_name}\n"
         f"当前 {fmt_num(w['temp'],'°C')}（体感 {fmt_num(w['feel'],'°C')}），风 {fmt_num(w['wind'],' km/h')}\n"
         f"今日 {fmt_num(w['tmin'],'°C')} ~ {fmt_num(w['tmax'],'°C')}，降雨概率 {fmt_num(w['pop'],'%')}"
     )
+
     desp = (
         f"{quote}\n\n"
         f"—— {source}\n\n"
@@ -184,7 +182,5 @@ def main():
     print("sent quote+weather")
 
 
-
 if __name__ == "__main__":
     main()
-
