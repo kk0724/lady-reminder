@@ -26,5 +26,8 @@ jobs:
       - name: Run script
         env:
           SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}
+          CITY: ${{ secrets.CITY }}   # 确保传递了 CITY 变量
+          TZ: ${{ secrets.TZ }}       # 确保传递了时区变量
         run: |
           python say_to_lady.py
+
