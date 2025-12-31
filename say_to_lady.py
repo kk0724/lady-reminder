@@ -4,11 +4,11 @@
 - GitHub Actions 定时每天运行一次
 - 从 Open-Meteo 获取天气（无需 API Key）
 - 从 一言 Hitokoto 获取每日一句（JSON）
-- 用 Server酱 short 让通知列表直接显示句子摘要
+- 用 Server酱推送每日提醒
 
 环境变量（建议在 GitHub Secrets / Variables 里设置）：
 - SERVERCHAN_KEY   必填：Server酱 SendKey（用女友的）
-- CITY             可选：城市名（英文，如 Xi'an）
+- CITY             可选：城市名（英文，如 Weifang）
 - LAT / LON        可选：经纬度（优先级高于 CITY）
 - TZ               可选：时区（默认 Asia/Shanghai）
 """
@@ -30,10 +30,6 @@ def push_serverchan(title: str, desp: str = "", short: str = ""):
         "title": (title or "")[:32],  # 通知标题尽量短
         "desp": desp or "",
     }
-    # short：卡片摘要（通知列表更容易显示到正文）
-    if short:
-        data["short"] = short[:64]
-
     r = requests.post(url, data=data, timeout=20)
     r.raise_for_status()
 
@@ -179,8 +175,8 @@ def main():
     now_str = now_cn.strftime("%Y-%m-%d %H:%M")
 
     # 4) 通知列表直接看到句子
-    title = f"{w['emoji']} {quote[:28]}"
-    short = quote
+    title = "每日提醒"  # 改回标题
+    short = quote  # 不用短句
 
     # 5) 详情：天气 + 来源 + 时间
     weather_line = (
