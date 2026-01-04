@@ -2,7 +2,7 @@ name: 给女友的每日提醒 ❤️
 
 on:
   schedule:
-    - cron: "23 0 * * *"   # 每天 8:00 AM (中国时间)
+    - cron: "0 23 * * *"   # 每天 8:00 AM (中国时间)
   workflow_dispatch: {}
 
 jobs:
